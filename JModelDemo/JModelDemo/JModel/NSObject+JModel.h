@@ -22,6 +22,11 @@ NS_ASSUME_NONNULL_BEGIN
 ///  - return 模型对象
 +(instancetype)j_modelWithJSON:(id)json;
 
+/// 从json初始化模型对象数组
+/// - Parameter json: json数据
+///  - return 模型对象数组
++(NSArray *)j_modelsWithJSON:(id)json;
+
 @end
 
 NS_ASSUME_NONNULL_END

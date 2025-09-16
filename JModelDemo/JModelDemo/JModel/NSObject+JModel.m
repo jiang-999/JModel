@@ -31,6 +31,44 @@
     return nil;
 }
 
+/// 从json初始化模型对象数组
+/// - Parameter json: json数据
+///  - return 模型对象数组
++(NSArray *)j_modelsWithJSON:(id)json{
+    if(!json || json == (id)kCFNull) return nil;
+    NSArray *arr = nil;
+    NSData *jsonData = nil;
+    if([json isKindOfClass:[NSArray class]]){
+        arr = json;
+    }else if ([json isKindOfClass:[NSString class]]){
+        jsonData = [(NSString *)json dataUsingEncoding:NSUTF8StringEncoding];
+    }else if ([json isKindOfClass:[NSData class]]){
+        jsonData = json;
+    }
+    if(jsonData){
+        arr = [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:NULL];
+        if(![arr isKindOfClass:[NSArray class]]){
+            arr = nil;
+        }
+    }
+    return [self j_modelsWithArray:arr];
+}
+
+
+/// 从数组初始化模型对象数组
+/// - Parameter arr: 数组
+/// - return 数组
++(NSArray *)j_modelsWithArray:(NSArray *)arr{
+    if(![arr isKindOfClass:[NSArray class]]){return nil;}
+    NSMutableArray *result = [NSMutableArray array];
+    for (NSDictionary *dic in arr) {
+        if(![dic isKindOfClass:[NSDictionary class]]){continue;}
+        id obj = [self j_modelWithJSON:dic];
+        if(obj){[result addObject:obj];};
+    }
+    return [NSArray arrayWithArray:result];
+}
+
 
 /// 通过字典设置类属性
 /// - Parameter dictionary: 字典
@@ -93,7 +131,6 @@
                 }
             }
         }
-        
     }
     
     //如果cls不为空
